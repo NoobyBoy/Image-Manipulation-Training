@@ -7,7 +7,7 @@ from statistics import mean
 import os
 
 """
-This module contain the print_function:
+This module contain the function:
 
 -black_and_white :
     Transform the image passed as parameter in a black and white Image,
