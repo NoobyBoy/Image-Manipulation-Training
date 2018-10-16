@@ -6,5 +6,4 @@ def main():
     print("Main")
     os.system("pause")
 
-if __name__ == '__main__':
-    main()
+main()
