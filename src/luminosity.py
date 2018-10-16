@@ -35,7 +35,7 @@ def luminosity_variation(img, value, percentage=False):
 
     else:
 
-        mask = img.point(lambda i : i + (value * 2.55))
+        mask = img.point(lambda i : i + round(value * 2.55))
         img.paste(mask)
 
 
@@ -52,7 +52,7 @@ def luminosity_percentage(img, percentage):
     if percentage > 100:
         percentage = 100
 
-    mask = img.point(lambda i : i + ((percentage - 50) * 5.1))
+    mask = img.point(lambda i : i + round((percentage - 50) * 5.1))
     img.paste(mask)
 
 

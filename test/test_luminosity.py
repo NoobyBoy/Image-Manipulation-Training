@@ -34,9 +34,8 @@ class LuminosityTest(unittest.TestCase):
 
         for i in range (y):
             for j in range (x):
-                print(j,i, px2[j,i])
-                self.assertTrue(px[j,i] >= (50, 50, 50))
-                self.assertTrue(px2[j,i] <= (205, 205, 205))
+                self.assertGreaterEqual(px[j,i], (50, 50, 50))
+                self.assertLessEqual(px2[j,i], (205, 205, 205))
                 self.assertEqual(px3[j,i], (255,255,255))
 
 
@@ -59,7 +58,6 @@ class LuminosityTest(unittest.TestCase):
 
                 for i in range (y):
                     for j in range (x):
-                        print(j,i, px2[j,i])
                         self.assertTrue(px[j,i], px_clean[j,i])
                         self.assertTrue(px2[j,i], (0, 0, 0))
                         self.assertEqual(px3[j,i], (255,255,255))
