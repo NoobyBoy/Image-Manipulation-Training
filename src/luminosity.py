@@ -29,21 +29,11 @@ def luminosity_variation(img, value, percentage=False):
     """
 
     if not percentage:
-        if percentage < -255:
-            percentage = -255
-
-        if percentage > 255:
-            percentage = 255
 
         mask = img.point(lambda i : i + value)
         img.paste(mask)
 
     else:
-        if percentage < -100:
-            percentage = -100
-
-        if percentage > 100:
-            percentage = 100
 
         mask = img.point(lambda i : i + (value * 2.55))
         img.paste(mask)
@@ -70,9 +60,10 @@ def luminosity_percentage(img, percentage):
 if __name__ == "__main__":
     img = Image.open("../image/spidey.jpg")
     i = int(input("luminosity variation :"))
-    luminosity_variation(img, i)
+    luminosity_variation(img, i, 1)
     img.show()
     img = Image.open("../image/spidey.jpg")
     i = int(input("luminosity percentage :"))
     luminosity_percentage(img, i)
+    img.show()
     os.system("pause")
