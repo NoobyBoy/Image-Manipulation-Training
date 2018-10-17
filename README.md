@@ -17,6 +17,8 @@ A repository where I push my little function I do with the Library Pillow (Fork 
 
     pixelisation : Pixelise the picture with the size of pixel you want
 
+    shuffling : shuffle the picture with zone of size you want
+
 ## 〰️ Function Done but the result is not satisfying 〰️
 
 ### Do not hesitate to let me know how to improve these ^^
@@ -28,8 +30,6 @@ A repository where I push my little function I do with the Library Pillow (Fork 
 ## ❌ Function considered to be done ❌
 
     fiding a picture inside a bigger one
-   
-    shuffle the picture
  
     all black and white excepted one color
    
