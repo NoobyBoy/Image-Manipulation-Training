@@ -81,9 +81,6 @@ def pixelisation(img, px_size):
 
     pixy = ImgPixelisation(img, px_size)
 
-    pixy.get_average()
-    pixy.fill()
-
     while (not pixy.end):
         while(not pixy.end_line()):
             pixy.get_average()
