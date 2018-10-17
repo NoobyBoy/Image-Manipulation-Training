@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 from PIL import Image
-from statistics import mean
+import numpy as np
 import os
 
 """
@@ -28,7 +28,9 @@ def black_and_white(img):
 
     for y in range (size_y):
         for x in range (size_x):
-            average = int(mean(px[x,y]))
+            ppx = px[x,y]
+            average = int((ppx[0] + ppx[1] + ppx[2]) / 3)
+            #average = int(np.mean(px[x,y]))   #wich one is faster ?
             px[x,y] = (average, average, average)
 
 
