@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 from PIL import Image
-from black_and_white import * 
+from black_and_white import *
 import os
 
 
@@ -16,27 +16,29 @@ This module contain the function:
 
 """
 
-def sepia(img, red_augmentation):
+def sepia(img, variation=(45,10,10)):
     """
     The function change the image in black_and_white and augment red parameter
     acording to red_augmentation
     """
 
-    black_and_white(img)
+    img.paste(img.convert("L"))
+    px = img.load()
 
-    R,G,B = img.split()
+    size_x, size_y = img.size
 
-    
-    R = R.point(lambda i : i + red_augmentation)
-    mask = Image.merge("RGB", (R,G,B))
+    for y in range(size_y):
+        for x in range(size_x):
+            ppx = px[x,y]
+            new = (ppx[0] + variation[0], ppx[1] + variation[1], ppx[2] + variation[2])
+            px[x,y] = new
 
-    img.paste(mask)
 
 
 
 if __name__ == "__main__":
-    img = Image.open("../image/wtf.jpg")
-    sepia(img, 40)
-    img.show()
+    img = Image.open("../image/merge_conflict.jpg")
     print ("Sepia: \n")
+    sepia(img)
+    img.show()
     os.system("pause")

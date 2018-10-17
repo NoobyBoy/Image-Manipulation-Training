@@ -22,10 +22,8 @@ A repository where I push my little function I do with the Library Pillow (Fork 
 ## 〰️ Function Done but the result is not satisfying 〰️
 
 ### Do not hesitate to let me know how to improve these ^^
-    
-    black_and_white 
-   
-    sepia 
+
+None
 
 ## ❌ Function considered to be done ❌
 
