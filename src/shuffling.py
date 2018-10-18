@@ -34,7 +34,7 @@ class ImgShuffling:
         self.max_x = lambda x : self.x + self.crop_size if self.x + self.crop_size <= self.size_x else self.size_x
         self.max_y = lambda y : self.y + self.crop_size if self.y + self.crop_size <= self.size_y else self.size_y
 
-    def add_crop(self):
+    def add_crop(self, img):
 
         self.all_croped.append(img.crop((self.x, self.y, self.max_x(self.x), self.max_y(self.y))))
 
@@ -85,7 +85,7 @@ def shuffling(img, crop_size):
     while (not pixy.end):
         while(not pixy.end_line()):
             nb = nb + 1 if first_line else nb
-            pixy.add_crop()
+            pixy.add_crop(img)
             pixy.next_column()
         pixy.next_line()
         first_line = False
