@@ -21,7 +21,7 @@ class TestBlackAndWhite(unittest.TestCase):
         #self.assertEqual(px, px2)
 
         black_and_white(img)
-        GreyScale(img)
+        GreyScale(img2)
 
         px = img.load()
         px2 = img2.load()
@@ -32,7 +32,7 @@ class TestBlackAndWhite(unittest.TestCase):
 
         for y in range(size_y):
             for x in range(size_x):
-                ppx = px[x,y]
+                ppx = img.getpixel((x,y))
                 self.assertEqual(ppx[0],ppx[1])
                 self.assertEqual(ppx[0],ppx[2])
                 self.assertEqual(ppx[1],ppx[2])

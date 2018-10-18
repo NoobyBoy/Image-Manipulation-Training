@@ -16,18 +16,15 @@ class TestPixelisation(unittest.TestCase):
 
         size_x, size_y = img.size
 
-        px = img.load()
-
         #just 2 big pixel so the test code is simpler to read and understand
         pixelisation(img, 500)
 
-        px2 = img.load()
 
         for x in range(size_x):
             for y in range(500):
-                self.assertEqual(px2[0,0], px2[x,y])
+                self.assertEqual(img.getpixel((0,0)), img.getpixel((x,y)))
             for y in range(500, size_y):
-                self.assertEqual(px2[0,500], px2[x,y])
+                self.assertEqual(img.getpixel((0,500)), img.getpixel((x,y)))
 
 
 
