@@ -8,7 +8,8 @@ import os
 """
 This module contain the function:
 
--pixelisation : pixelise the picture with pixel of size you want
+-pixelisation :
+    pixelise the picture with pixel of size you want
 
 
 """

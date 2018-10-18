@@ -10,20 +10,12 @@ from shuffling import *
 
 class TestShuffling(unittest.TestCase):
 
-    # don't work for the moment, have to find a way to compare 2 picture without
-    # checking each pixel
     def test_shuffling(self):
         img = Image.open("../image/spidey.jpg")
         img2 = Image.open("../image/spidey.jpg")
         img3 = Image.open("../image/spidey.jpg")
 
         size_x, size_y = img.size
-
-        for y in range(size_y):
-            for x in range(size_x):
-                self.assertEqual(img.getpixel((x,y)), img2.getpixel((x,y)))
-                self.assertEqual(img.getpixel((x,y)), img3.getpixel((x,y)))
-                self.assertEqual(img2.getpixel((x,y)), img3.getpixel((x,y)))
 
         shuffling(img2, 10)
         shuffling(img3, 10)

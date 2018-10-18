@@ -12,15 +12,8 @@ class TestBlackAndWhite(unittest.TestCase):
 
     def test_black_and_white(self):
         img = Image.open("../image/spidey.jpg")
-        img2 = Image.open("../image/spidey.jpg")
-
-        #Same as test_shuffling can't test directly if equal
-        #self.assertEqual(px, px2)
 
         black_and_white(img)
-        GreyScale(img2)
-
-        #self.assertEqual(px, px2)
 
         size_x, size_y = img.size
 

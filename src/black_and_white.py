@@ -9,6 +9,7 @@ This module contain the function:
 
 -black_and_white :
     Transform the image passed as parameter in a black and white Image,
+    also called greyscale 
 
 """
 

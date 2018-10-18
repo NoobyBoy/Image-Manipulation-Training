@@ -10,16 +10,14 @@ import os
 This module contain the function:
 
 -sepia :
-    add a sépia effect on the picture,
-    the effect is not very a sepia effect and is very slow because of
-    black_and_white function ... meh...
+    add a sépia effect on the picture.
 
 """
 
 def sepia(img, variation=(45,10,10)):
     """
-    The function change the image in black_and_white and augment red parameter
-    acording to red_augmentation
+    The function change the image in black_and_white and change according to
+    variation parameter default: (45,10,10)
     """
 
     img.paste(img.convert("L"))
