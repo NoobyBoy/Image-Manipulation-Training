@@ -23,9 +23,9 @@ A repository where I push my little function I do with the Library Pillow (Fork 
 
 ### Do not hesitate to let me know how to improve these ^^
 
-None
+    None
 
-## ❌ Function considered to be done ❌
+## ❌ Function i'm considering to do ❌
 
     fiding a picture inside a bigger one
  
