@@ -10,6 +10,8 @@ from shuffling import *
 
 class TestShuffling(unittest.TestCase):
 
+    # don't work for the moment, have to find a way to compare 2 picture without
+    # checking each pixel
     def test_shuffling(self):
         img = Image.open("../image/spidey.jpg")
         img2 = Image.open("../image/spidey.jpg")
@@ -19,6 +21,7 @@ class TestShuffling(unittest.TestCase):
         px2 = img2.load()
         px3 = img3.load()
 
+        # Don't work :/ can't test directly if equal
         self.assertEqual(px, px2)
         self.assertEqual(px, px3)
         self.assertEqual(px2, px3)
