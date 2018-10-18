@@ -11,32 +11,23 @@ from luminosity import *
 
 class LuminosityTest(unittest.TestCase):
 
-    def test_bad_parameter(self):
-
-        with self.assertRaises(TypeError):
-            luminosity_variation()
-            luminosity_variation("img", "value")
 
     def test_luminosity_variation(self):
 
         img = Image.open("../image/spidey.jpg")
         img2 = Image.open("../image/spidey.jpg")
         img3 = Image.open("../image/spidey.jpg")
-        x,y = img.size
+        size_x,size_y = img.size
 
         luminosity_variation(img, 50)
         luminosity_variation(img2, -50)
         luminosity_variation(img3, 100, True)
 
-        px = img.load()
-        px2 = img.load()
-        px3 = img3.load()
-
-        for i in range (y):
-            for j in range (x):
-                self.assertGreaterEqual(px[j,i], (50, 50, 50))
-                self.assertLessEqual(px2[j,i], (205, 205, 205))
-                self.assertEqual(px3[j,i], (255,255,255))
+        for y in range(size_y):
+            for x in range(size_x):
+                self.assertGreaterEqual(img.getpixel((x,y)), (50, 50, 50))
+                self.assertLessEqual(img2.getpixel((x,y)), (205, 205, 205))
+                self.assertEqual(img3.getpixel((x,y)), (255,255,255))
 
 
     def test_luminosity_percentage(self):
