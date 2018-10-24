@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import simpledialog
 from tkinter import messagebox
+from tkinter import colorchooser
 from PIL import ImageTk
 #my modules
 from src.black_and_white import *
@@ -37,7 +38,19 @@ class Gui(Frame):
         self.menu_file.add_command(label="Save As", command=self.save_as)
         self.menu_file.add_command(label="Exit", command=self.quit)
 
+        self.menu_edit = Menu(self.menu, tearoff=0)
+        self.menu_edit.add_command(label="Undo",)
+        self.menu_edit.add_command(label="Redo",)
+        self.menu_edit.add_command(label="Original",)
+        self.menu_edit.add_command(label="Actual",)
+
+        self.menu_help = Menu(self.menu, tearoff=0)
+        self.menu_help.add_command(label="?")
+        self.menu_help.add_command(label="About")
+
         self.menu.add_cascade(label="File", menu=self.menu_file)
+        self.menu.add_cascade(label="Edit", menu=self.menu_edit)
+        self.menu.add_cascade(label="Help", menu=self.menu_help)
         win.config(menu=self.menu)
 
         #Button
@@ -50,13 +63,13 @@ class Gui(Frame):
         self.but_shuffle = Button(self, text="Shuffling", command=self.shuffling)
         self.but_thresh= Button(self, text="Thresholding", command=self.thresholding)
 
-        self.but_baw.grid(column=0, row=1, sticky="W", pady=5)
-        self.but_lum.grid(column=0, row=2, sticky="W", pady=5)
-        self.but_neg.grid(column=0, row=3, sticky="W", pady=5)
-        self.but_pix.grid(column=0, row=4, sticky="W", pady=5)
-        self.but_sepia.grid(column=0, row=5, sticky="W", pady=5)
-        self.but_shuffle.grid(column=0, row=6, sticky="W", pady=5)
-        self.but_thresh.grid(column=0, row=7, sticky="W", pady=5)
+        self.but_baw.grid(column=0, row=1, sticky="WN", pady=5)
+        self.but_lum.grid(column=0, row=2, sticky="WN", pady=5)
+        self.but_neg.grid(column=0, row=3, sticky="WN", pady=5)
+        self.but_pix.grid(column=0, row=4, sticky="WN", pady=5)
+        self.but_sepia.grid(column=0, row=5, sticky="WN", pady=5)
+        self.but_shuffle.grid(column=0, row=6, sticky="WN", pady=5)
+        self.but_thresh.grid(column=0, row=7, sticky="WN", pady=5)
 
         #Image
         self.lab_img = Label(self)
@@ -113,7 +126,21 @@ class Gui(Frame):
                 self.lab_img["image"] = self.imgTk
 
     def sepia(self):
-        pass
+        if self.img:
+            answer = messagebox.askyesnocancel("Choose", "Do you want to use the default value")
+
+            if answer:
+                sepia(self.img)
+                self.imgTk = ImageTk.PhotoImage(self.img)
+                self.lab_img["image"] = self.imgTk
+
+            elif not answer:
+                color = colorchooser.askcolor()
+                color = (int(color[0][0]), int(color[0][1]), int(color[0][2]))
+                sepia(self.img, color)
+                self.imgTk = ImageTk.PhotoImage(self.img)
+                self.lab_img["image"] = self.imgTk
+
 
     def shuffling(self):
         if self.img:
