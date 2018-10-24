@@ -3,6 +3,8 @@
 from tkinter import *
 from tkinter import filedialog
 from tkinter import simpledialog
+from tkinter import messagebox
+from PIL import ImageTk
 #my modules
 from src.black_and_white import *
 from src.luminosity import *
@@ -21,8 +23,10 @@ class Gui(Frame):
         self.pack()
 
         self.path = ""
-        self.all_types = [("All Files", "*.*"), ("JPEG","*.jpg *.jpeg"),
-            ("PNG", "*.png"),("BMP", "*.bmp"), ("GIF", "*.gif")]
+        self.img = None
+        self.imgTk = None
+        self.all_types = [("All Files", ".*"), ("JPEG",".jpg .jpeg"),
+            ("PNG", ".png"),("BMP", ".bmp"), ("GIF", ".gif")]
 
         #Menu Creation
         self.menu = Menu(self)
@@ -56,17 +60,25 @@ class Gui(Frame):
 
         #Image
         self.lab_img = Label(self)
-        self.lab_img.grid(column=1, row=1, rowspan=8)
+        self.lab_img.grid(column=1, row=1, pady=4, rowspan=8)
 
     def save(self):
-        pass
+        if self.img and self.path:
+            self.img.save(self.path)
 
     def save_as(self):
-        self.path = filedialog.asksaveasfilename(filetype=self.all_types)
+        if sys.platform.startswith('win'):
+            messagebox.showwarning("Warning", """On Windows the file extension is not autimatically added
+            and should be added by the hand""")
+        self.path = filedialog.asksaveasfilename(filetypes=self.all_types)
         self.save()
 
     def load(self):
         self.path = filedialog.askopenfilename(filetype=self.all_types)
+        self.img = Image.open(self.path)
+        self.imgTk = ImageTk.PhotoImage(self.img, size="400,400")
+        self.lab_img["image"] = self.imgTk
+
 
     def luminosity(self):
         #test of simpledialog
