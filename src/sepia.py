@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 from PIL import Image
-from black_and_white import *
 import os
 
 
