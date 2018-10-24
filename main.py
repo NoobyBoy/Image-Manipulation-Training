@@ -42,13 +42,13 @@ class Gui(Frame):
 
         #Button
 
-        self.but_baw = Button(self, text="Black & White")
+        self.but_baw = Button(self, text="Black & White", command=self.black_and_white)
         self.but_lum = Button(self, text="Luminosity", command=self.luminosity)
-        self.but_neg = Button(self, text="Negative")
-        self.but_pix = Button(self, text="Pixelisation")
-        self.but_sepia = Button(self, text="Sepia")
-        self.but_shuffle = Button(self, text="Shuffling")
-        self.but_thresh= Button(self, text="Thresholding")
+        self.but_neg = Button(self, text="Negative", command=self.negative)
+        self.but_pix = Button(self, text="Pixelisation", command=self.pixelisation)
+        self.but_sepia = Button(self, text="Sepia", command=self.sepia)
+        self.but_shuffle = Button(self, text="Shuffling", command=self.shuffling)
+        self.but_thresh= Button(self, text="Thresholding", command=self.thresholding)
 
         self.but_baw.grid(column=0, row=1, sticky="W", pady=5)
         self.but_lum.grid(column=0, row=2, sticky="W", pady=5)
@@ -69,26 +69,63 @@ class Gui(Frame):
     def save_as(self):
         if sys.platform.startswith('win'):
             messagebox.showwarning("Warning", """On Windows the file extension is not autimatically added
-            and should be added by the hand""")
+                and should be added by the hand""")
         self.path = filedialog.asksaveasfilename(filetypes=self.all_types)
         self.save()
 
     def load(self):
         self.path = filedialog.askopenfilename(filetype=self.all_types)
-        self.img = Image.open(self.path)
-        self.imgTk = ImageTk.PhotoImage(self.img, size="400,400")
-        self.lab_img["image"] = self.imgTk
+        if self.path:
+            self.img = Image.open(self.path)
+            self.imgTk = ImageTk.PhotoImage(self.img)
+            self.lab_img["image"] = self.imgTk
+
+    def black_and_white(self):
+        if self.img:
+            black_and_white(self.img)
+            self.imgTk = ImageTk.PhotoImage(self.img)
+            self.lab_img["image"] = self.imgTk
 
 
     def luminosity(self):
         #test of simpledialog
-        answer = simpledialog.askinteger("Input", "Percentage :",
-                                 parent=self, minvalue=0, maxvalue=100)
-        if answer is not None:
-            print("Your age is ", answer)
-        else:
-            print("You don't have an age?")
+        if self.img:
+            answer = simpledialog.askinteger("Input", "Percentage :",
+                                    minvalue=0, maxvalue=100)
+            if answer:
+                pass
+            else:
+                pass
 
+    def negative(self):
+        if self.img:
+            negative(self.img)
+            self.imgTk = ImageTk.PhotoImage(self.img)
+            self.lab_img["image"] = self.imgTk
+
+    def pixelisation(self):
+        if self.img:
+            size = simpledialog.askinteger("Input", "Size of pixelisation :",
+                                    minvalue=2)
+            if size:
+                pixelisation(self.img, size)
+                self.imgTk = ImageTk.PhotoImage(self.img)
+                self.lab_img["image"] = self.imgTk
+
+    def sepia(self):
+        pass
+
+    def shuffling(self):
+        if self.img:
+            size = simpledialog.askinteger("Input", "Size of croping :",
+                                    minvalue=2)
+            if size:
+                shuffling(self.img, size)
+                self.imgTk = ImageTk.PhotoImage(self.img)
+                self.lab_img["image"] = self.imgTk
+
+    def thresholding(self):
+        pass
 
 
 def main():
