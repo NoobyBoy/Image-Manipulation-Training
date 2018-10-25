@@ -5,6 +5,7 @@ from tkinter import filedialog
 from tkinter import simpledialog
 from tkinter import messagebox
 from tkinter import colorchooser
+from tkinter import ttk
 from PIL import ImageTk
 #my modules
 from src_gui.dialog_window import *
@@ -20,8 +21,9 @@ class Gui(Frame):
 
     def __init__(self, win, **kwargs):
         self.win = win
-        Frame.__init__(self, self.win, width=300, height=200, **kwargs)
+        Frame.__init__(self, self.win, width=770, height=40, **kwargs)
         self.win.protocol("WM_DELETE_WINDOW", self.win.quit)
+        self.win.resizable(0, 0)
         self.pack()
 
         self.history = []
@@ -75,8 +77,14 @@ class Gui(Frame):
         self.but_thresh.grid(column=6, row=1, sticky="WN", pady=5, padx=5)
 
         #Image
-        self.lab_img = Label(self)
-        self.lab_img.grid(column=0, row=2, pady=4, columnspan=8)
+        self.yscroll = ttk.Scrollbar(self, orient=VERTICAL)
+        self.yscroll.grid(column=7, row=2, pady=4, padx=4, sticky="NS")
+        self.xscroll = ttk.Scrollbar(self, orient=HORIZONTAL)
+        self.xscroll.grid(column=0, row=3, pady=4, padx=4, columnspan=7, sticky="WE")
+        self.can_img = Canvas(self, width=400, height=400, xscrollcommand=self.xscroll.set, yscrollcommand=self.yscroll.set)
+        self.can_img.grid(column=0, row=2, pady=4, columnspan=7)
+        self.xscroll.config(command=self.can_img.xview)
+        self.yscroll.config(command=self.can_img.yview)
 
         #Event
         self.bind_all("<Control-KeyPress-z>", self.undo)
@@ -85,18 +93,10 @@ class Gui(Frame):
         self.bind_all("<Control-KeyPress-s>", self.save)
         self.bind_all("<Control-Shift-KeyPress-s>", self.save_as)
 
-        #temporary because I don't know why but open/save window is broken sometime
-        self.path = "image\\back.jpeg"
-        if self.path:
-            self.img = Image.open(self.path)
-            self.imgTk = ImageTk.PhotoImage(self.img)
-            self.lab_img["image"] = self.imgTk
-            self.history = [self.img.copy()]
-            self.pos = 0
 
     def modification(self):
         self.imgTk = ImageTk.PhotoImage(self.img)
-        self.lab_img["image"] = self.imgTk
+        self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
         self.pos += 1
         del self.history[self.pos:len(self.history)]
         self.history.append(self.img.copy())
@@ -107,7 +107,7 @@ class Gui(Frame):
                 self.pos -= 1
                 self.img = self.history[self.pos].copy()
                 self.imgTk = ImageTk.PhotoImage(self.img)
-                self.lab_img["image"] = self.imgTk
+                self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
 
         except IndexError:
             self.pos += 1
@@ -117,7 +117,7 @@ class Gui(Frame):
             self.pos += 1
             self.img = self.history[self.pos].copy()
             self.imgTk = ImageTk.PhotoImage(self.img)
-            self.lab_img["image"] = self.imgTk
+            self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
 
         except IndexError:
             self.pos -= 1
@@ -126,7 +126,7 @@ class Gui(Frame):
         try:
             self.pos = 0
             self.imgTk = ImageTk.PhotoImage(self.history[0])
-            self.lab_img["image"] = self.imgTk
+            self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
         except IndexError:
             pass
 
@@ -134,7 +134,7 @@ class Gui(Frame):
         try:
             self.pos = len(self.history) - 1
             self.imgTk = ImageTk.PhotoImage(self.history[-1])
-            self.lab_img["image"] = self.imgTk
+            self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
         except IndexError:
             pass
 
@@ -160,8 +160,14 @@ class Gui(Frame):
                                     initialdir=self.idir)
         if self.path:
             self.img = Image.open(self.path)
+            self.size_x, self.size_y = self.img.size
             self.imgTk = ImageTk.PhotoImage(self.img)
-            self.lab_img["image"] = self.imgTk
+            self.can_img.delete("all")
+            self.can_img["width"] = self.size_x if self.size_x < self.winfo_screenwidth() - 200 else self.winfo_screenwidth() - 200
+            self.can_img["height"] = self.size_y if self.size_y < self.winfo_screenheight() - 200 else self.winfo_screenheight() - 200
+            self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
+            self.can_img["scrollregion"] = (0, 0, self.size_x, self.size_y)
+            self.can_img.image = self.imgTk
             self.history = [self.img.copy()]
             self.pos = 0
 
