@@ -80,22 +80,32 @@ class Gui(Frame):
 
         #Event
         self.bind_all("<Control-KeyPress-z>", self.undo)
-        self.bind_all("<Control-KeyPress-z>", self.undo)
+        self.bind_all("<Control-KeyPress-y>", self.redo)
+        self.bind_all("<Control-KeyPress-o>", self.load)
         self.bind_all("<Control-KeyPress-s>", self.save)
         self.bind_all("<Control-Shift-KeyPress-s>", self.save_as)
+
+        #temporary because I don't know why but open/save window is broken sometime
+        self.path = "image\\back.jpeg"
+        if self.path:
+            self.img = Image.open(self.path)
+            self.imgTk = ImageTk.PhotoImage(self.img)
+            self.lab_img["image"] = self.imgTk
+            self.history = [self.img.copy()]
+            self.pos = 0
 
     def modification(self):
         self.imgTk = ImageTk.PhotoImage(self.img)
         self.lab_img["image"] = self.imgTk
-        del self.history[self.pos:-1]
-        self.history.append(self.img.copy())
         self.pos += 1
+        del self.history[self.pos:len(self.history)]
+        self.history.append(self.img.copy())
 
     def undo(self, *evt):
         try :
             if self.pos > 0:
                 self.pos -= 1
-                self.img = self.history[self.pos]
+                self.img = self.history[self.pos].copy()
                 self.imgTk = ImageTk.PhotoImage(self.img)
                 self.lab_img["image"] = self.imgTk
 
@@ -105,7 +115,7 @@ class Gui(Frame):
     def redo(self, *evt):
         try :
             self.pos += 1
-            self.img = self.history[self.pos]
+            self.img = self.history[self.pos].copy()
             self.imgTk = ImageTk.PhotoImage(self.img)
             self.lab_img["image"] = self.imgTk
 
@@ -114,6 +124,7 @@ class Gui(Frame):
 
     def original(self):
         try:
+            self.pos = 0
             self.imgTk = ImageTk.PhotoImage(self.history[0])
             self.lab_img["image"] = self.imgTk
         except IndexError:
@@ -144,7 +155,7 @@ class Gui(Frame):
         self.path = filedialog.asksaveasfilename(filetypes=self.all_types)
         self.save()
 
-    def load(self):
+    def load(self, *evt):
         self.path = filedialog.askopenfilename(filetype=self.all_types,
                                     initialdir=self.idir)
         if self.path:
