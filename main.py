@@ -7,6 +7,7 @@ from tkinter import messagebox
 from tkinter import colorchooser
 from PIL import ImageTk
 #my modules
+from src_gui.dialog_window import *
 from src.black_and_white import *
 from src.luminosity import *
 from src.negative import *
@@ -206,7 +207,10 @@ class Gui(Frame):
                 self.modification()
 
     def thresholding(self):
-        pass
+        if self.img:
+            dialog = MyDialogThresholding(self)
+            self.wait_window(dialog.top)
+            answer = dialog.answer
 
 
 def main():
