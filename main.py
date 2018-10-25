@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 #-*- conding utf-8 -*-
 
 from tkinter import *
@@ -81,7 +82,7 @@ class Gui(Frame):
         self.yscroll.grid(column=7, row=2, pady=4, padx=4, sticky="NS")
         self.xscroll = ttk.Scrollbar(self, orient=HORIZONTAL)
         self.xscroll.grid(column=0, row=3, pady=4, padx=4, columnspan=7, sticky="WE")
-        self.can_img = Canvas(self, width=400, height=400, xscrollcommand=self.xscroll.set, yscrollcommand=self.yscroll.set)
+        self.can_img = Canvas(self, width=400, height=200, xscrollcommand=self.xscroll.set, yscrollcommand=self.yscroll.set)
         self.can_img.grid(column=0, row=2, pady=4, columnspan=7)
         self.xscroll.config(command=self.can_img.xview)
         self.yscroll.config(command=self.can_img.yview)
