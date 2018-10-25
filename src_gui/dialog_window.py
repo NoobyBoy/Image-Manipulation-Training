@@ -38,9 +38,43 @@ class MyDialogThresholding:
         self.answer = answer
         self.top.destroy()
 
+class MyDialogLuminosity:
+
+    def __init__(self, parent):
+
+        self.top = Toplevel(parent)
+        self.top.grab_set()
+        self.top.title("Choose the component")
+
+        self.answer = None
+
+        var = lambda : self.choose("Var")
+        per = lambda : self.choose("Per")
+
+
+        self.txt = Label(self.top, text="Choose way you want to modify the luminosity : ")
+        self.txt.grid(column=0, row=0, columnspan=3, padx=5)
+
+        self.but_var = Button(self.top, text="Variation", command=var)
+        self.but_per = Button(self.top, text="Percentage", command=per)
+        self.but_Cancel = Button(self.top, text="Cancel", command=self.top.destroy)
+
+        self.but_var.grid(column=0, row=1, padx=6, pady=10)
+        self.but_per.grid(column=1, row=1, padx=6)
+        self.but_Cancel.grid(column=2, row=1, padx=6)
+
+    def choose(self, answer):
+
+        self.answer = answer
+        self.top.destroy()
+
+
 
 if __name__ == '__main__':
 
     root = Tk()
     d = MyDialogThresholding(root)
     root.wait_window(d.top)
+
+    dd = MyDialogLuminosity(root)
+    root.wait_window(dd.top)

@@ -171,15 +171,23 @@ class Gui(Frame):
             self.modification()
 
 
-
     def luminosity(self):
         if self.img:
-            answer = simpledialog.askinteger("Input", "Percentage :",
-                                    minvalue=0, maxvalue=100)
-            if answer:
-                pass
-            else:
-                pass
+            dialog = MyDialogLuminosity(self)
+            self.wait_window(dialog.top)
+            answer = dialog.answer
+            if answer == "Var":
+                var = simpledialog.askinteger("Input", "Variation [-255 ; 255] :",
+                                        minvalue=-255, maxvalue=255)
+                if var:
+                    luminosity_variation(self.img, var)
+                    self.modification()
+            elif answer == "Per":
+                perc = simpledialog.askinteger("Input", "Percentage :",
+                                        minvalue=0, maxvalue=100)
+                if perc:
+                    luminosity_percentage(self.img, perc)
+                    self.modification()
 
     def negative(self):
         if self.img:
@@ -204,9 +212,10 @@ class Gui(Frame):
 
             elif not answer:
                 color = colorchooser.askcolor()
-                color = (int(color[0][0]), int(color[0][1]), int(color[0][2]))
-                sepia(self.img, color)
-                self.modification()
+                if None not in color:
+                    color = (int(color[0][0]), int(color[0][1]), int(color[0][2]))
+                    sepia(self.img, color)
+                    self.modification()
 
 
     def shuffling(self):
