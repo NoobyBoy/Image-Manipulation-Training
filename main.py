@@ -23,7 +23,10 @@ class Gui(Frame):
         self.win.protocol("WM_DELETE_WINDOW", self.win.quit)
         self.pack()
 
+        self.history = []
+        self.pos = 0
         self.path = ""
+        self.idir = "image"
         self.img = None
         self.imgTk = None
         self.all_types = [("All Files", ".*"), ("JPEG",".jpg .jpeg"),
@@ -39,10 +42,10 @@ class Gui(Frame):
         self.menu_file.add_command(label="Exit", command=self.quit)
 
         self.menu_edit = Menu(self.menu, tearoff=0)
-        self.menu_edit.add_command(label="Undo",)
-        self.menu_edit.add_command(label="Redo",)
-        self.menu_edit.add_command(label="Original",)
-        self.menu_edit.add_command(label="Actual",)
+        self.menu_edit.add_command(label="Undo", command=self.undo)
+        self.menu_edit.add_command(label="Redo", command=self.redo)
+        self.menu_edit.add_command(label="Original", command=self.original)
+        self.menu_edit.add_command(label="Actual", command=self.actual)
 
         self.menu_help = Menu(self.menu, tearoff=0)
         self.menu_help.add_command(label="?")
@@ -54,7 +57,6 @@ class Gui(Frame):
         win.config(menu=self.menu)
 
         #Button
-
         self.but_baw = Button(self, text="Black & White", command=self.black_and_white)
         self.but_lum = Button(self, text="Luminosity", command=self.luminosity)
         self.but_neg = Button(self, text="Negative", command=self.negative)
@@ -75,33 +77,90 @@ class Gui(Frame):
         self.lab_img = Label(self)
         self.lab_img.grid(column=1, row=1, pady=4, rowspan=8)
 
-    def save(self):
-        if self.img and self.path:
-            self.img.save(self.path)
+        #Event
+        self.bind_all("<Control-KeyPress-z>", self.undo)
+        self.bind_all("<Control-KeyPress-z>", self.undo)
+        self.bind_all("<Control-KeyPress-s>", self.save)
+        self.bind_all("<Control-Shift-KeyPress-s>", self.save_as)
 
-    def save_as(self):
+    def modification(self):
+        self.imgTk = ImageTk.PhotoImage(self.img)
+        self.lab_img["image"] = self.imgTk
+        del self.history[self.pos:-1]
+        self.history.append(self.img.copy())
+        self.pos += 1
+
+    def undo(self, *evt):
+        try :
+            if self.pos > 0:
+                self.pos -= 1
+                self.img = self.history[self.pos]
+                self.imgTk = ImageTk.PhotoImage(self.img)
+                self.lab_img["image"] = self.imgTk
+
+        except IndexError:
+            self.pos += 1
+
+    def redo(self, *evt):
+        try :
+            self.pos += 1
+            self.img = self.history[self.pos]
+            self.imgTk = ImageTk.PhotoImage(self.img)
+            self.lab_img["image"] = self.imgTk
+
+        except IndexError:
+            self.pos -= 1
+
+    def original(self):
+        try:
+            self.imgTk = ImageTk.PhotoImage(self.history[0])
+            self.lab_img["image"] = self.imgTk
+        except IndexError:
+            pass
+
+    def actual(self):
+        try:
+            self.pos = len(self.history) - 1
+            self.imgTk = ImageTk.PhotoImage(self.history[-1])
+            self.lab_img["image"] = self.imgTk
+        except IndexError:
+            pass
+
+    def save(self, *evt):
+        if self.img and self.path:
+            try:
+                self.img.save(self.path)
+            except:
+                if sys.platform.startswith('win'):
+                    messagebox.showerror("Error", "No extension to the file (On Windows: even if you select the extension you have to add it by hand)")
+                else:
+                    messagebox.showerror("Error", "No extension to the file")
+
+    def save_as(self, *evt):
         if sys.platform.startswith('win'):
             messagebox.showwarning("Warning", """On Windows the file extension is not autimatically added
-                and should be added by the hand""")
+                and should be added by hand""")
         self.path = filedialog.asksaveasfilename(filetypes=self.all_types)
         self.save()
 
     def load(self):
-        self.path = filedialog.askopenfilename(filetype=self.all_types)
+        self.path = filedialog.askopenfilename(filetype=self.all_types,
+                                    initialdir=self.idir)
         if self.path:
             self.img = Image.open(self.path)
             self.imgTk = ImageTk.PhotoImage(self.img)
             self.lab_img["image"] = self.imgTk
+            self.history = [self.img.copy()]
+            self.pos = 0
 
     def black_and_white(self):
         if self.img:
             black_and_white(self.img)
-            self.imgTk = ImageTk.PhotoImage(self.img)
-            self.lab_img["image"] = self.imgTk
+            self.modification()
+
 
 
     def luminosity(self):
-        #test of simpledialog
         if self.img:
             answer = simpledialog.askinteger("Input", "Percentage :",
                                     minvalue=0, maxvalue=100)
@@ -113,8 +172,7 @@ class Gui(Frame):
     def negative(self):
         if self.img:
             negative(self.img)
-            self.imgTk = ImageTk.PhotoImage(self.img)
-            self.lab_img["image"] = self.imgTk
+            self.modification()
 
     def pixelisation(self):
         if self.img:
@@ -122,24 +180,21 @@ class Gui(Frame):
                                     minvalue=2)
             if size:
                 pixelisation(self.img, size)
-                self.imgTk = ImageTk.PhotoImage(self.img)
-                self.lab_img["image"] = self.imgTk
+                self.modification()
 
     def sepia(self):
         if self.img:
-            answer = messagebox.askyesnocancel("Choose", "Do you want to use the default value")
+            answer = messagebox.askyesnocancel("Choose", "Do you want to use the default value (it's advisable)")
 
             if answer:
                 sepia(self.img)
-                self.imgTk = ImageTk.PhotoImage(self.img)
-                self.lab_img["image"] = self.imgTk
+                self.modification()
 
             elif not answer:
                 color = colorchooser.askcolor()
                 color = (int(color[0][0]), int(color[0][1]), int(color[0][2]))
                 sepia(self.img, color)
-                self.imgTk = ImageTk.PhotoImage(self.img)
-                self.lab_img["image"] = self.imgTk
+                self.modification()
 
 
     def shuffling(self):
@@ -148,8 +203,7 @@ class Gui(Frame):
                                     minvalue=2)
             if size:
                 shuffling(self.img, size)
-                self.imgTk = ImageTk.PhotoImage(self.img)
-                self.lab_img["image"] = self.imgTk
+                self.modification()
 
     def thresholding(self):
         pass
