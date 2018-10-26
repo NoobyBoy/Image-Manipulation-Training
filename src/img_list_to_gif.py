@@ -4,13 +4,29 @@ from __future__ import print_function
 from PIL import Image
 import os
 
+"""
+This module contain the function:
 
-def image_list_to_gif(img_list, name="new_gif.gif", duration=100, loop_mode=0):
+-image_list_to_gif:
+    Transform a list of pics into an animated gif
 
-    if not name.endswith(".gif"):
-        name += ".gif"
 
-    img_list[0].save(name, save_all=True, append_images=img_list[1:],
+"""
+
+
+
+def image_list_to_gif(img_list, path="new_gif.gif", duration=100, loop_mode=0):
+    """
+    Transform a list of Image into an animated gif
+        -path : represente the path + name of the GIF
+        -duration : how long is each frame (in milliseconds)
+        -loop_mode : 0 = infinite loop, 1 = only once , 2 = twice ...
+    """
+
+    if not path.endswith(".gif"):
+        path += ".gif"
+
+    img_list[0].save(path, save_all=True, append_images=img_list[1:],
                         duration=duration, loop=loop_mode)
 
 
