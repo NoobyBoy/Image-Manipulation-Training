@@ -61,14 +61,16 @@ class Gui(Frame):
         win.config(menu=self.menu)
 
         #Button
-        self.but_baw = Button(self, text="Black & White", command=self.black_and_white)
-        self.but_lum = Button(self, text="Luminosity", command=self.luminosity)
-        self.but_neg = Button(self, text="Negative", command=self.negative)
-        self.but_pix = Button(self, text="Pixelisation", command=self.pixelisation)
-        self.but_sepia = Button(self, text="Sepia", command=self.sepia)
-        self.but_shuffle = Button(self, text="Shuffling", command=self.shuffling)
-        self.but_thresh= Button(self, text="Thresholding", command=self.thresholding)
-        self.but_gif= Button(self, text="Make a gif", command=self.img_gif)
+        self.can_but = Canvas(self)
+
+        self.but_baw = Button(self.can_but, text="Black & White", command=self.black_and_white)
+        self.but_lum = Button(self.can_but, text="Luminosity", command=self.luminosity)
+        self.but_neg = Button(self.can_but, text="Negative", command=self.negative)
+        self.but_pix = Button(self.can_but, text="Pixelisation", command=self.pixelisation)
+        self.but_sepia = Button(self.can_but, text="Sepia", command=self.sepia)
+        self.but_shuffle = Button(self.can_but, text="Shuffling", command=self.shuffling)
+        self.but_thresh= Button(self.can_but, text="Thresholding", command=self.thresholding)
+        self.but_gif= Button(self.can_but, text="Make a gif", command=self.img_gif)
 
         self.but_baw.grid(column=0, row=1, sticky="WN", pady=5, padx=5)
         self.but_lum.grid(column=1, row=1, sticky="WN", pady=5, padx=5)
@@ -79,13 +81,15 @@ class Gui(Frame):
         self.but_thresh.grid(column=6, row=1, sticky="WN", pady=5, padx=5)
         self.but_gif.grid(column=7, row=1, sticky="WN", pady=5, padx=5)
 
+        self.can_but.grid(column=1, row=1, sticky="WN")
+
         #Image
         self.yscroll = ttk.Scrollbar(self, orient=VERTICAL)
-        self.yscroll.grid(column=7, row=2, pady=4, padx=4, sticky="NS")
+        self.yscroll.grid(column=8, row=2, pady=4, padx=4, sticky="NS")
         self.xscroll = ttk.Scrollbar(self, orient=HORIZONTAL)
-        self.xscroll.grid(column=0, row=3, pady=4, padx=4, columnspan=7, sticky="WE")
+        self.xscroll.grid(column=1, row=3, pady=4, padx=4, columnspan=7, sticky="WE")
         self.can_img = Canvas(self, width=400, height=200, xscrollcommand=self.xscroll.set, yscrollcommand=self.yscroll.set)
-        self.can_img.grid(column=0, row=2, pady=4, columnspan=7)
+        self.can_img.grid(column=1, row=2, pady=4, columnspan=7)
         self.xscroll.config(command=self.can_img.xview)
         self.yscroll.config(command=self.can_img.yview)
 
