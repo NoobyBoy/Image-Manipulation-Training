@@ -68,6 +68,7 @@ class Gui(Frame):
         self.but_sepia = Button(self, text="Sepia", command=self.sepia)
         self.but_shuffle = Button(self, text="Shuffling", command=self.shuffling)
         self.but_thresh= Button(self, text="Thresholding", command=self.thresholding)
+        self.but_gif= Button(self, text="Make a gif", command=self.img_gif)
 
         self.but_baw.grid(column=0, row=1, sticky="WN", pady=5, padx=5)
         self.but_lum.grid(column=1, row=1, sticky="WN", pady=5, padx=5)
@@ -76,6 +77,7 @@ class Gui(Frame):
         self.but_sepia.grid(column=4, row=1, sticky="WN", pady=5, padx=5)
         self.but_shuffle.grid(column=5, row=1, sticky="WN", pady=5, padx=5)
         self.but_thresh.grid(column=6, row=1, sticky="WN", pady=5, padx=5)
+        self.but_gif.grid(column=7, row=1, sticky="WN", pady=5, padx=5)
 
         #Image
         self.yscroll = ttk.Scrollbar(self, orient=VERTICAL)
@@ -244,6 +246,8 @@ class Gui(Frame):
                 if threshold:
                     thresholding(self.img, threshold, answer)
                     self.modification()
+    def img_gif(self):
+        pass
 
 
 def main():

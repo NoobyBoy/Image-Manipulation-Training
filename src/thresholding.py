@@ -39,7 +39,11 @@ def thresholding(img, value, choosed=""):
     """
 
     if choosed: choosed = choosed.capitalize()
-    if choosed in ("R", "G", "B"): R,G,B = img.split()
+    try:
+        if choosed in ("R", "G", "B"): R,G,B = img.split()
+    except ValueError:
+         R,G,B,A = img.split()
+
 
     if choosed == "R":
         R = R.point(lambda i : threshold(value, i))
