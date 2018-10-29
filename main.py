@@ -10,7 +10,9 @@ from tkinter import ttk
 from PIL import ImageTk
 #my modules
 from src_gui.dialog_window import *
+from src_gui.make_gif_gui import *
 from src.black_and_white import *
+from src.img_list_to_gif import *
 from src.luminosity import *
 from src.negative import *
 from src.pixelisation import *
@@ -251,7 +253,12 @@ class Gui(Frame):
                     thresholding(self.img, threshold, answer)
                     self.modification()
     def img_gif(self):
-        pass
+        dialog = MyDialogGif(self)
+        self.wait_window(dialog.top)
+        res = dialog.get_res()
+
+        if None not in res:
+            image_list_to_gif(*res)
 
 
 def main():

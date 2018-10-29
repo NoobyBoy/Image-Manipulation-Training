@@ -4,6 +4,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import pandas as pd
 import os
@@ -18,12 +19,11 @@ class MyDialogGif:
 
         self.all_types = [("All Files", ".*"), ("JPEG",".jpg .jpeg"),
             ("PNG", ".png"),("BMP", ".bmp"), ("GIF", ".gif")]
-        self.result = (None, None, None, None)
-        self.img_list = []
-        self.path = ""
+        self.img_list = None
+        self.path = None
         self.duration = 100
         self.loop_mode = 0
-        self.all_files = pd.DataFrame(index=["Name","Image","ImageTk"])
+        self.all_files = {}
 
         self.can_but = Canvas(self.top)
 
@@ -34,7 +34,7 @@ class MyDialogGif:
         self.ent_dur = Entry(self.can_but, width=5)
         self.lab_loop = Label(self.can_but, text="Number of loop\n (0 = infinite) :")
         self.ent_loop = Entry(self.can_but, width=5)
-        self.but_save = Button(self.can_but, text="Save GIF")
+        self.but_save = Button(self.can_but, text="Save GIF", command=self.save)
         self.but_cancel = Button(self.can_but, text="Cancel", command=self.top.destroy)
 
         self.ent_dur.insert(0, str(self.duration))
@@ -55,27 +55,59 @@ class MyDialogGif:
         self.yscroll = ttk.Scrollbar(self.top, orient=VERTICAL)
         self.yscroll.grid(column=2, row=1, sticky="NS")
 
-        self.res_box = Listbox(self.top, width=50, height=23,
+        self.res_box = Listbox(self.top, width=50, height=23, selectmode="single",
                                 yscrollcommand=self.yscroll.set)
         self.res_box.grid(column=1, row=1, padx=10, pady=10)
 
         self.yscroll.config(command=self.res_box.yview)
 
+        self.res_box.bind('<<ListboxSelect>>', self.selection)
+
     def add_files(self):
+
         files = self.path = filedialog.askopenfilenames(filetype=self.all_types)
 
         for file in files:
             img = Image.open(file)
-            imgtk = ImageTk.PhotoImage(img)
             name = os.path.basename(file)
-            self.all_files = self.all_files.append(
-                {"Name":name, "Image":img, "ImageTk":imgtk}, ignore_index=True)
-
-        print(self.all_files)
+            self.all_files[name] = img
+            self.res_box.insert("end", name)
 
 
     def save(self):
-        pass
+
+        try:
+            self.duration = int(self.ent_dur.get())
+            self.loop_mode = int(self.ent_loop.get())
+
+        except ValueError:
+            messagebox.showerror("Error", "A number is expected")
+
+        else:
+            self.path = filedialog.asksaveasfilename(filetype=[("GIF", ".gif")])
+
+            if self.path:
+                self.img_list = list(self.all_files.values())
+                self.top.destroy()
+
+
+    def selection(self, evt):
+
+        w = evt.widget
+        index = int(w.curselection()[0])
+        res = w.get(index)
+
+        selected = self.all_files[res]
+        selected = selected.resize((150,150), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(selected)
+        self.can_img.create_image(0, 0, image=img, anchor=NW)
+        self.can_img.image = img
+
+    def get_res(self):
+
+        print(self.img_list)
+
+        return self.img_list, self.path, self.duration, self.loop_mode
 
 
 if __name__ == '__main__':
