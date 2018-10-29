@@ -2,6 +2,12 @@
 
 A repository where I push my little function I do with the Library Pillow (Fork of lib PIL) to make visual effect on pictures. Do not hesitate to read the code and tell me if you see bad things or things improvable (It's the point of this repo).
 
+## An Amazing GUI
+
+The gui allow to use the function that I did, without any dificulties.
+
+I have to admit that it's almost better than Photoshop (Don't tell them, they'll be jealous)
+
 ## ✔️ Function Done ✔️
 
     black_and_white : Black and white effect
