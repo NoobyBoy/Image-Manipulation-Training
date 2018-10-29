@@ -6,8 +6,9 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import pandas as pd
 import os
+
+from src_gui.my_dict import Dict
 
 class MyDialogGif:
 
@@ -23,7 +24,8 @@ class MyDialogGif:
         self.path = None
         self.duration = 100
         self.loop_mode = 0
-        self.all_files = {}
+        self.evt = None
+        self.all_files = Dict()
 
         self.can_but = Canvas(self.top)
 
@@ -34,6 +36,9 @@ class MyDialogGif:
         self.ent_dur = Entry(self.can_but, width=5)
         self.lab_loop = Label(self.can_but, text="Number of loop\n (0 = infinite) :")
         self.ent_loop = Entry(self.can_but, width=5)
+        self.but_up = Button(self.can_but, text="Up", command=self.up)
+        self.but_down = Button(self.can_but, text="Down", command=self.down)
+        self.but_del = Button(self.can_but, text="Delete", command=self.delete)
         self.but_save = Button(self.can_but, text="Save GIF", command=self.save)
         self.but_cancel = Button(self.can_but, text="Cancel", command=self.top.destroy)
 
@@ -46,6 +51,9 @@ class MyDialogGif:
         self.ent_dur.grid(column=2, row=2, padx=10, pady=5, sticky="W")
         self.lab_loop.grid(column=1, row=3, pady=5, sticky="E")
         self.ent_loop.grid(column=2, row=3, padx=10, pady=5, sticky="W")
+        self.but_up.grid(column=1, row=4, padx=10, pady=5, sticky="W")
+        self.but_down.grid(column=1, row=4, padx=5, pady=5, columnspan=2)
+        self.but_del.grid(column=2, row=4, padx=5, pady=5)
         self.but_save.grid(column=1, row=5, padx=5, pady=5, sticky="N")
         self.but_cancel.grid(column=2, row=5, padx=5, pady=5, sticky="N")
 
@@ -87,15 +95,70 @@ class MyDialogGif:
             self.path = filedialog.asksaveasfilename(filetype=[("GIF", ".gif")])
 
             if self.path:
-                self.img_list = list(self.all_files.values())
+                self.img_list = self.all_files.lvalues()
                 self.top.destroy()
 
+    def up(self):
+
+        res, index = self.get_act()
+
+        if res is None:
+            return
+
+        try:
+            self.all_files.swap(index, index - 1)
+            self.res_box.delete(index)
+            self.res_box.insert(index - 1, res)
+            self.res_box.selection_set(index - 1)
+
+        except IndexError:
+            pass
+
+    def down(self):
+
+        res, index = self.get_act()
+
+        if res is None:
+            return
+
+        try:
+            self.all_files.swap(index, index + 1)
+            self.res_box.delete(index)
+            self.res_box.insert(index + 1, res)
+            self.res_box.selection_set(index + 1)
+
+        except IndexError:
+            pass
+
+    def delete(self):
+
+        res, index = self.get_act()
+
+        if res is None:
+            return
+
+        self.res_box.delete(index)
+        del self.all_files[res]
+
+    def get_act(self):
+        try:
+            w = self.evt.widget
+            index = int(w.curselection()[0])
+            return w.get(index), index
+
+        except IndexError:
+            return None, None
+
+        except AttributeError:
+            return None, None
 
     def selection(self, evt):
 
-        w = evt.widget
-        index = int(w.curselection()[0])
-        res = w.get(index)
+        self.evt = evt
+        res, index = self.get_act()
+
+        if res is None:
+            return
 
         selected = self.all_files[res]
         selected = selected.resize((150,150), Image.ANTIALIAS)
@@ -104,8 +167,6 @@ class MyDialogGif:
         self.can_img.image = img
 
     def get_res(self):
-
-        print(self.img_list)
 
         return self.img_list, self.path, self.duration, self.loop_mode
 
