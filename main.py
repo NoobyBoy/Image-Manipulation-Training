@@ -1,13 +1,14 @@
 #! /usr/bin/env python3
 #-*- conding utf-8 -*-
 
+from PIL import Image, ImageTk
 from tkinter import *
-from tkinter import filedialog
-from tkinter import simpledialog
-from tkinter import messagebox
 from tkinter import colorchooser
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter import simpledialog
 from tkinter import ttk
-from PIL import ImageTk
+
 #my modules
 from src_gui.dialog_window import *
 from src_gui.make_gif_gui import *
@@ -104,6 +105,10 @@ class Gui(Frame):
 
 
     def modification(self):
+        """
+        The Function called everytime an effect is done on the actual picture
+        """
+
         self.imgTk = ImageTk.PhotoImage(self.img)
         self.can_img.create_image(0, 0, image=self.imgTk, anchor=NW)
         self.pos += 1
@@ -111,6 +116,10 @@ class Gui(Frame):
         self.history.append(self.img.copy())
 
     def undo(self, *evt):
+        """
+        The function allow to reset the picture in it's previous state
+        """
+
         try :
             if self.pos > 0:
                 self.pos -= 1
@@ -122,6 +131,10 @@ class Gui(Frame):
             self.pos += 1
 
     def redo(self, *evt):
+        """
+        The function allow to reset the picture in it's 'next' state
+        """
+
         try :
             self.pos += 1
             self.img = self.history[self.pos].copy()
@@ -132,6 +145,10 @@ class Gui(Frame):
             self.pos -= 1
 
     def original(self):
+        """
+        The function allow to reset the picture original/first state
+        """
+
         try:
             self.pos = 0
             self.imgTk = ImageTk.PhotoImage(self.history[0])
@@ -140,6 +157,9 @@ class Gui(Frame):
             pass
 
     def actual(self):
+        """
+        The function allow to reset the picture in it's actual/last state
+        """
         try:
             self.pos = len(self.history) - 1
             self.imgTk = ImageTk.PhotoImage(self.history[-1])
@@ -148,6 +168,10 @@ class Gui(Frame):
             pass
 
     def save(self, *evt):
+        """
+        Save the picture with the current seted path
+        """
+
         if self.img and self.path:
             try:
                 self.img.save(self.path)
@@ -158,6 +182,10 @@ class Gui(Frame):
                     messagebox.showerror("Error", "No extension to the file")
 
     def save_as(self, *evt):
+        """
+        Allow the user to choose the path where he want to save the picture
+        """
+
         if sys.platform.startswith('win'):
             messagebox.showwarning("Warning", """On Windows the file extension is not autimatically added
                 and should be added by hand""")
@@ -165,6 +193,10 @@ class Gui(Frame):
         self.save()
 
     def load(self, *evt):
+        """
+        load the selected picture
+        """
+
         self.path = filedialog.askopenfilename(filetype=self.all_types,
                                     initialdir=self.idir)
         if self.path:
@@ -181,12 +213,20 @@ class Gui(Frame):
             self.pos = 0
 
     def black_and_white(self):
+        """
+        Launch the black and white function
+        """
+
         if self.img:
             black_and_white(self.img)
             self.modification()
 
 
     def luminosity(self):
+        """
+        Launch the luminosity function with user's parameters
+        """
+
         if self.img:
             dialog = MyDialogLuminosity(self)
             self.wait_window(dialog.top)
@@ -205,11 +245,19 @@ class Gui(Frame):
                     self.modification()
 
     def negative(self):
+        """
+        Launch the negative function
+        """
+
         if self.img:
             negative(self.img)
             self.modification()
 
     def pixelisation(self):
+        """
+        Launch the pixelisation function with user's parameters
+        """
+
         if self.img:
             size = simpledialog.askinteger("Input", "Size of pixelisation :",
                                     minvalue=2)
@@ -218,6 +266,10 @@ class Gui(Frame):
                 self.modification()
 
     def sepia(self):
+        """
+        Launch the sepia function with user's parameters
+        """
+
         if self.img:
             answer = messagebox.askyesnocancel("Choose", "Do you want to use the default value (it's advisable)")
 
@@ -234,6 +286,10 @@ class Gui(Frame):
 
 
     def shuffling(self):
+        """
+        Launch the shuffling function with user's parameters
+        """
+
         if self.img:
             size = simpledialog.askinteger("Input", "Size of croping :",
                                     minvalue=2)
@@ -242,6 +298,10 @@ class Gui(Frame):
                 self.modification()
 
     def thresholding(self):
+        """
+        Launch the thresholding function with user's parameters
+        """
+
         if self.img:
             dialog = MyDialogThresholding(self)
             self.wait_window(dialog.top)
@@ -252,7 +312,13 @@ class Gui(Frame):
                 if threshold:
                     thresholding(self.img, threshold, answer)
                     self.modification()
+
+
     def img_gif(self):
+        """
+        Launch the img_list_to_gif function with user's parameters
+        """
+
         dialog = MyDialogGif(self)
         self.wait_window(dialog.top)
         res = dialog.get_res()
