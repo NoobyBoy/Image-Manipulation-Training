@@ -1,6 +1,5 @@
 #-*- conding utf-8 -*-
 
-from __future__ import print_function
 from PIL import Image
 import os
 
@@ -16,7 +15,7 @@ This module contain the function:
 
 def negative(img):
     """
-    The function for each pixel attribute the invserse color 
+    The function for each pixel attribute the invserse color
     """
 
     mask = img.point(lambda i : 255 - i)

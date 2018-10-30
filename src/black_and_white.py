@@ -1,6 +1,5 @@
 #-*- conding utf-8 -*-
 
-from __future__ import print_function
 from PIL import Image
 import os
 
@@ -9,7 +8,7 @@ This module contain the function:
 
 -black_and_white :
     Transform the image passed as parameter in a black and white Image,
-    also called greyscale 
+    also called greyscale
 
 """
 

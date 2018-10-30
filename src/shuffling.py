@@ -1,6 +1,5 @@
 #-*- conding utf-8 -*-
 
-from __future__ import print_function
 from PIL import Image
 from random import sample
 import os
