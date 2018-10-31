@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 #-*- conding utf-8 -*-
 
 from PIL import Image
@@ -77,29 +78,29 @@ def shuffling(img, crop_size):
     another zone of crop_size
     """
 
-    pixy = ImgShuffling(img, crop_size)
+    shuffly = ImgShuffling(img, crop_size)
 
     first_line = True
     nb = 0
-    while (not pixy.end):
-        while(not pixy.end_line()):
+    while (not shuffly.end):
+        while(not shuffly.end_line()):
             nb = nb + 1 if first_line else nb
-            pixy.add_crop(img)
-            pixy.next_column()
-        pixy.next_line()
+            shuffly.add_crop(img)
+            shuffly.next_column()
+        shuffly.next_line()
         first_line = False
 
     new_size_x = nb * crop_size
-    new_size_y = int(len(pixy.all_croped) / nb) * crop_size
+    new_size_y = int(len(shuffly.all_croped) / nb) * crop_size
     shuffled_img = Image.new("RGB", (new_size_x, new_size_y))
 
-    pixy.shuffle()
-    pixy.reset()
-    while (not pixy.end):
-        while(not pixy.end_line()):
-            pixy.past_it(shuffled_img)
-            pixy.next_column()
-        pixy.next_line()
+    shuffly.shuffle()
+    shuffly.reset()
+    while (not shuffly.end):
+        while(not shuffly.end_line()):
+            shuffly.past_it(shuffled_img)
+            shuffly.next_column()
+        shuffly.next_line()
 
     img.paste(shuffled_img)
 

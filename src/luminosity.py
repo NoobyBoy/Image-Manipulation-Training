@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 #-*- conding utf-8 -*-
 
 from PIL import Image
@@ -28,12 +29,10 @@ def luminosity_variation(img, value, percentage=False):
     """
 
     if not percentage:
-
         mask = img.point(lambda i : i + value)
         img.paste(mask)
 
     else:
-
         mask = img.point(lambda i : i + round(value * 2.55))
         img.paste(mask)
 
